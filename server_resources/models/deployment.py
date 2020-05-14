@@ -15,9 +15,9 @@ class Deployment(db.Model):
     name = db.Column(db.String(50), unique=True, index=True, nullable=False)
     url = db.Column(db.String(50), unique=True, index=True, nullable=False)
     private = db.Column(db.Boolean, default=True)
-    users = relationship("User", secondary=deployment_users, cascade="all", backref="deployments")
-    db_servers = relationship(DatabaseServer, cascade="all, delete-orphan", backref='deployment')
-    app_servers = relationship(ApplicationServer, cascade="all, delete-orphan", backref='deployment')
+    users = relationship("User", secondary=deployment_users, backref="deployments")
+    db_servers = relationship(DatabaseServer, backref='deployment')
+    app_servers = relationship(ApplicationServer, backref='deployment')
 
     def __repr__(self):
         return '<Deployment {}>'.format(self.name)
