@@ -1,0 +1,11 @@
+{% extends 'bases/base.html' %}
+{% block title %}Restore Password{% endblock %}
+{% block content %}
+<form class="d-flex flex-column justify-content-center align-items-center" action="{{ url_for('auth.restore') }}" method="post">
+  <div class="form-group w-50 m-2">
+    <label for="email">Email address</label>
+    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

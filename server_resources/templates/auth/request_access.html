@@ -1,0 +1,28 @@
+{% extends 'bases/base.html' %}
+{% block title %}Request Access{% endblock %}
+{% block content %}
+<form class="d-flex flex-column justify-content-center align-items-center" action="{{ url_for('auth.request_access') }}"
+      method="post"
+      oninput='confirm.setCustomValidity(confirm.value != password.value ? "Passwords do not match." : "")'>
+     <div class="form-group w-50 m-2">
+        <label for="name">User name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter username" name="name" required>
+    </div>
+    <div class="form-group w-50 m-2">
+        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+    </div>
+    <div class="form-group w-50 m-2">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+    </div>
+    <div class="form-group w-50 m-2">
+        <label for="confirm">Confirm Password</label>
+        <input type="password" class="form-control" id="confirm" placeholder="Confirm Password" name="confirm" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="bg-light text-muted w-50 m-2 p-3">
+        You will be able to access the system, however, you wouldn't be able to access any resource lists until an administrator allows you.
+    </div>
+</form>
+{% endblock %}
