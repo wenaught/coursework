@@ -1,0 +1,178 @@
+{% extends 'bases/base_show.html' %}
+{% set record_name = deployment.name %}
+{% set delete_url = url_for('deployments.delete', name=deployment.name) %}
+{% set update_url = url_for('deployments.update', name=deployment.name) %}
+{% block title %} {{ deployment.name }} {% endblock %}
+
+{% block table_header %}
+<th scope="col">Name</th>
+<th scope="col">URL</th>
+<th scope="col">Private</th>
+{% endblock %}
+
+{% block table_content %}
+<td>{{ deployment.name }}</td>
+<td>{{ deployment.url }}</td>
+<td>{{ deployment.private }}</td>
+{% endblock %}
+
+{% if g.user.admin %}
+{% block controls %}
+<div class="float-right">
+    <button class="btn btn-primary float-right mx-2" type="button" data-toggle="modal" data-target="#users">
+        Users
+    </button>
+    <button class="btn btn-primary float-right mx-2" type="button" data-toggle="modal" data-target="#db_servers">
+        Databases
+    </button>
+    <button class="btn btn-primary float-right mx-2" type="button" data-toggle="modal" data-target="#app_servers">
+        Application servers
+    </button>
+</div>
+{% endblock %}
+{% endif %}
+
+{% if g.user.admin %}
+{% block additional %}
+<div class="modal fade" id="users" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="usersTitle">Users</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <h6 class="col-6">Bound users</h6>
+                    <h6 class="col-6">Boundable users</h6>
+                </div>
+                <div class="row">
+                    <form class="list-group col-6">
+                        {% for user in user_list if deployment in user.deployments %}
+                        <button class="list-group-item list-group-item-action"
+                                formaction="{{url_for('deployments.unbind_user', deployment_name=deployment.name, user_name=user.name)}}"
+                                formmethod="post"
+                                type="submit">
+                            {{ user.name }}
+                        </button>
+                        {% endfor %}
+                    </form>
+                    <form class="list-group col-6">
+                        {% for user in user_list if deployment not in user.deployments %}
+                        <button class="list-group-item list-group-item-action"
+                                formaction="{{url_for('deployments.bind_user', deployment_name=deployment.name, user_name=user.name)}}"
+                                formmethod="post"
+                                type="submit">
+                            {{ user.name }}
+                        </button>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="db_servers" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dbServersTitle">Database Servers</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <h6 class="col-6">Bound servers</h6>
+                    <h6 class="col-6">Boundable servers</h6>
+                </div>
+                <div class="row">
+                    <form class="list-group col-6">
+                        {% for db_server in deployment.db_servers %}
+                        <button class="list-group-item list-group-item-action"
+                                formaction="{{url_for('deployments.unbind_db_server', deployment_name=deployment.name, db_server_name=db_server.name)}}"
+                                formmethod="post"
+                                type="submit">
+                            {{ db_server.name }} at {{ db_server.private_address }}
+                        </button>
+                        {% endfor %}
+                    </form>
+                    <form class="list-group col-6">
+                        {% for db_server in db_server_list if db_server not in deployment.db_servers %}
+                        <button class="list-group-item list-group-item-action"
+                                formaction="{{url_for('deployments.bind_db_server', deployment_name=deployment.name, db_server_name=db_server.name)}}"
+                                formmethod="post"
+                                type="submit">
+                            {{ db_server.name }} at {{ db_server.private_address }}
+                        </button>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="app_servers" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appServersTitle">Application Servers</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <h6 class="col-6">Bound servers</h6>
+                    <h6 class="col-6">Boundable servers</h6>
+                </div>
+                <div class="row">
+                    <form class="list-group col-6">
+                        {% for app_server in deployment.app_servers %}
+                        <button class="list-group-item list-group-item-action"
+                                formaction="{{url_for('deployments.unbind_app_server', deployment_name=deployment.name, app_server_name=app_server.name)}}"
+                                formmethod="post"
+                                type="submit">
+                            {{ app_server.name }} at {{ app_server.private_address }}
+                        </button>
+                        {% endfor %}
+                    </form>
+                    <form class="list-group col-6">
+                        {% for app_server in app_server_list if app_server not in deployment.app_servers %}
+                        <button class="list-group-item list-group-item-action"
+                                formaction="{{url_for('deployments.bind_app_server', deployment_name=deployment.name, app_server_name=app_server.name)}}"
+                                formmethod="post"
+                                type="submit">
+                            {{ app_server.name }} at {{ app_server.private_address }}
+                        </button>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% endif %}
+
+{% if g.user.admin %}
+{% block update_form %}
+<div class="form-group p-1">
+    <label for="name">Change Name</label>
+    <input type="text" class="form-control" id="name" placeholder="{{ deployment.name }}" name="name">
+</div>
+<div class="form-group p-1">
+    <label for="url">Change URL</label>
+    <input type="url" class="form-control" id="url" placeholder="{{ deployment.url }}" name="url">
+</div>
+<div class="form-check">
+    <input type="checkbox" class="form-check-input" id="private" name="private">
+    <label class="form-check-label" for="private">Private</label>
+</div>
+<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#add">Add users</button>
+{% endblock %}
+{% endif %}
