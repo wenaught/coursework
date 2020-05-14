@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Application Server List{% endblock %}
+{% block table_header %}
+<th scope="col">ID</th>
+<th scope="col">Name</th>
+<th scope="col">Private Address</th>
+<th scope="col">OS</th>
+<th scope="col">RAM Size, GB</th>
+<th scope="col">CPU Cores</th>
+<th scope="col">Drive Size, GB</th>
+<th scope="col">Deployment</th>
+{% endblock %}
+{% block table_body %}
+{% for db_server in servers %}
+<tr>
+    <th scope="row">{{ app_server.id }}</th>
+    <td><a href="{{ url_for(app_server.show, name=app_server.name) }}">{{ app_server.name }}</a></td>
+    <td>{{ app_server.private_address }}</td>
+    <td>{{ app_server.os }}</td>
+    <td>{{ app_server.ram_size }}</td>
+    <td>{{ app_server.cpu_cores }}</td>
+    <td>{{ app_server.drive_size }}</td>
+    <td><a href="{{ url_for(deployment.show) }}">{{ app_server.deployment.name }}</a></td>
+</tr>
+{% endfor %}
+{% endblock %}

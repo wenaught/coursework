@@ -1,0 +1,74 @@
+{% extends 'bases/base.html' %}
+{% block content %}
+<div class="my-2 mx-5 p-3">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            {% block table_header %}
+            {% endblock %}
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {% block table_content %}
+            {% endblock %}
+        </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#update">
+        Edit
+    </button>
+    {% if record_name != g.user.name %}
+    <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#delete">
+        Delete
+    </button>
+    {% endif %}
+</div>
+<div class="modal fade" id="delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTitle">Delete</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="" action="{{ delete_url }}"
+                      method="post"
+                      oninput='confirm.setCustomValidity(confirm.value != "{{ record_name }}" ? "Record name not correct." : "")'>
+                    <div class="form-group mx-auto">
+                        <label for="confirm_delete">Confirm Delete</label>
+                        <input type="text" class="form-control" id="confirm_delete" placeholder="Type in record's name"
+                               name="confirm" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Confirm delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="update" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTitle">Edit</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="" action="{{ update_url }}"
+                      method="post" oninput="{{ update_check }}">
+                    {% block update_form %}
+                    {% endblock %}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'bases/base_list.html' %}
+{% block title %}Deployment List{% endblock %}
+{% block table_header %}
+<th scope="col">ID</th>
+<th scope="col">Name</th>
+<th scope="col">URL</th>
+<th scope="col">Private</th>
+{% endblock %}
+{% block table_body %}
+{% for deployment in deployment_list %}
+<tr>
+    <th scope="row">{{ deployment.id }}</th>
+    <td><a href="{{ url_for(deployments.show, name=deployment.name) }}">{{ deployment.name }}</a></td>
+    <td>{{ deployment.url }}</td>
+    <td>{{ deployment.private }}</td>
+</tr>
+{% endfor %}
+{% endblock %}

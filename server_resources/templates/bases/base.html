@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"
+            integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd"
+            crossorigin="anonymous"></script>
+    <title>{% block title %}{% endblock %} - Server Resources</title>
+</head>
+<body>
+{% if g.user %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('users.show', name=g.user.name) }}">{{ g.user.name }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('deployments.list_deployments') }}">Deployments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('app_servers.list_app_servers') }}">Servers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('db_servers.list_db_servers') }}">Databases</a>
+            </li>
+            {% if g.user.admin %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('users.list_users') }}">Users</a>
+            </li>
+            {% endif %}
+        </ul>
+        <a class="btn btn-secondary my-2 my-lg-0" href="{{ url_for('auth.logout') }}" role="button">Logout</a>
+    </div>
+</nav>
+{% endif %}
+{% block content %}{% endblock %}
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{category}} border border-rounded w-25 alert-dismissible fade show"
+     style="position: fixed; bottom: 2%; right: 2%" role="alert">
+    {{message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+</body>
+</html>

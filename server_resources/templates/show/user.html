@@ -1,0 +1,34 @@
+{% extends 'bases/base_show.html' %}
+{% set record_name = user.name %}
+{% set delete_url = url_for('users.delete', name=user.name) %}
+{% set update_url = url_for('users.update', name=user.name) %}
+{% set update_check = 'confirm.setCustomValidity(confirm.value != new_password.value ? "Passwords do not match." : "")' %}
+{% block title %} {{ user.name }} {% endblock %}
+{% block table_header %}
+    <th scope="col">Name</th>
+    <th scope="col">Email</th>
+{% endblock %}
+{% block table_content %}
+    <td>{{ user.name }}</td>
+    <td>{{ user.email }}</td>
+{% endblock %}
+{% block update_form %}
+    <div class="form-group p-1">
+        <label for="email">Change Email</label>
+        <input type="email" class="form-control" id="email" placeholder="{{ user.email }}" name="email">
+    </div>
+    <div class="form-group p-1">
+        <label for="password">Current Password</label>
+        <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+    </div>
+    <div class="form-group p-1">
+        <label for="new_password">Change Password</label>
+        <input type="password" class="form-control" id="new_password" placeholder="New Password"
+               name="new_password" onchange="confirm.removeAttribute('disabled')" minlength="6">
+    </div>
+    <div class="form-group p-1">
+        <label for="confirm">Confirm New Password</label>
+        <input type="password" class="form-control" id="confirm" placeholder="Confirm Password" name="confirm"
+               minlength="6">
+    </div>
+{% endblock %}

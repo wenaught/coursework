@@ -1,0 +1,10 @@
+{% extends 'bases/base.html' %}
+{% block title %}Main{% endblock %}
+{% block content %}
+{% if not g.user %}
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <a class="btn btn-primary w-50 m-2" href="{{ url_for('auth.login') }}" style="font-size: 1.4rem" role="button">Login</a>
+        <a class="btn btn-primary w-50 m-2" href="{{ url_for('auth.request_access') }}" style="font-size: 1.4rem" role="button">Request access</a>
+    </div>
+{% endif %}
+{% endblock %}

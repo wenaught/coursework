@@ -1,0 +1,24 @@
+{% extends 'bases/base_list.html' %}
+{% block title %}User List{% endblock %}
+{% block table_header %}
+<th scope="col">ID</th>
+<th scope="col">Name</th>
+<th scope="col">Email</th>
+<th scope="col">Admin</th>
+{% endblock %}
+
+{% block table_body %}
+{% for user in user_list %}
+{% if not user.deployments %}
+<tr class="table-warning" data-toggle="tooltip" data-placement="top"
+    title="User does not have access to any deployments">
+    {% else %}
+<tr>
+    {% endif %}
+    <th scope="row">{{ user.id }}</th>
+    <td><a href="{{ url_for(users.show, name=user.name) }}">{{ user.name }}</a></td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.admin }}</td>
+</tr>
+{% endfor %}
+{% endblock %}
