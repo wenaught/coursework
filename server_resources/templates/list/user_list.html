@@ -24,6 +24,7 @@
 {% endfor %}
 {% endblock %}
 
+{% if g.user.admin %}
 {% block add_form %}
 <div class="form-group p-1 m-2">
     <label for="name">User name</label>
@@ -37,4 +38,9 @@
     <label for="password">Password</label>
     <input type="password" class="form-control" id="password" placeholder="Password" name="password" minlength="6" required>
 </div>
+<div class="form-check">
+    <input type="checkbox" class="form-check-input" id="admin" name="admin">
+    <label class="form-check-label" for="admin">Administrator</label>
+</div>
 {% endblock %}
+{% endif %}
