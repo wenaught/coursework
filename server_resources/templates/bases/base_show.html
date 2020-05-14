@@ -20,12 +20,19 @@
         Edit
     </button>
     {% endif %}
-    {% if record_name != g.user.name %}
+    {% if record_name != g.user.name and g.user.admin %}
     <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#delete">
         Delete
     </button>
     {% endif %}
+    {% if g.user.admin %}
+    {% block controls %}{% endblock %}
+    {% endif %}
 </div>
+
+{% block additional %}{% endblock %}
+
+{% if g.user.admin %}
 <div class="modal fade" id="delete" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -51,7 +58,8 @@
         </div>
     </div>
 </div>
-
+{% endif %}
+{% if record_name == g.user.name or g.user.admin %}
 <div class="modal fade" id="update" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -73,5 +81,5 @@
         </div>
     </div>
 </div>
-{% block additional %}{% endblock %}
+{% endif %}
 {% endblock %}

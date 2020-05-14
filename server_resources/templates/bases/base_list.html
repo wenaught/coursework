@@ -13,11 +13,13 @@
         {% endblock %}
         </tbody>
     </table>
-
+    {% if g.user.admin %}
     <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add">
         Add
     </button>
+    {% endif %}
 </div>
+{% if g.user.admin %}
 <div class="modal fade" id="add" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -39,4 +41,5 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}
