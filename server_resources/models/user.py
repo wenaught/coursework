@@ -1,5 +1,4 @@
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from server_resources import db
@@ -8,12 +7,10 @@ from server_resources import db
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
-    _password = db.Column("password", db.String, default=True)
-    deployments = relationship("DeploymentUser", cascade="all,delete-orphan", backref="users")
-    app_servers = relationship("AppServerUser", cascade="all,delete-orphan", backref="users")
-    db_servers = relationship("DBServerUser", cascade="all,delete-orphan", backref="users")
+    name = db.Column(db.String, unique=True, index=True, nullable=False)
+    email = db.Column(db.String, unique=True, index=True, nullable=False)
+    _password = db.Column("password", db.String, nullable=False)
+    admin = db.Column(db.Boolean, default=False)
 
     @hybrid_property
     def password(self):
