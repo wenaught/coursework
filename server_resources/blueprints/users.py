@@ -30,7 +30,7 @@ def show(name):
 
 
 @blueprint.route('/delete/<name>', methods=['POST'])
-@login_required
+@admin_required
 def delete(name):
     user = User.query.filter_by(name=name).first()
     db.session.delete(user)

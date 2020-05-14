@@ -1,6 +1,10 @@
 import functools
+import random
+import string
+import smtplib
+import ssl
 
-from flask import Blueprint
+from flask import Blueprint, current_app
 from flask import flash
 from flask import g
 from flask import redirect
@@ -75,7 +79,6 @@ def login():
         elif not user.check_password(password):
             warning = "Incorrect password."
         if warning is None:
-            # store the user id in a new session and return to the index
             session.clear()
             session["user_id"] = user.id
             return redirect(url_for("index"))
@@ -87,6 +90,17 @@ def login():
 def restore():
     if request.method == "POST":
         email = request.form["email"]
+        new_password = ''.join(random.sample(string.ascii_letters, 10))
+        user = User.query.filter_by(email=email).first()
+        user.password = new_password
+
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+            sender_email = current_app.config['EMAIL']
+            sender_password = current_app.config['EMAIL_PASSWORD']
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, email, new_password)
+        flash("Email with new password sent", "info")
         return redirect(url_for("auth.login"))
     return render_template("auth/restore.html")
 
