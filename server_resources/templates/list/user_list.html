@@ -1,4 +1,5 @@
 {% extends 'bases/base_list.html' %}
+{% set add_url = url_for('users.add') %}
 {% block title %}User List{% endblock %}
 {% block table_header %}
 <th scope="col">ID</th>
@@ -9,16 +10,31 @@
 
 {% block table_body %}
 {% for user in user_list %}
-{% if not user.deployments %}
+{% if not user.deployments and not user.admin %}
 <tr class="table-warning" data-toggle="tooltip" data-placement="top"
     title="User does not have access to any deployments">
     {% else %}
 <tr>
     {% endif %}
     <th scope="row">{{ user.id }}</th>
-    <td><a href="{{ url_for(users.show, name=user.name) }}">{{ user.name }}</a></td>
+    <td><a href="{{ url_for('users.show', name=user.name) }}">{{ user.name }}</a></td>
     <td>{{ user.email }}</td>
     <td>{{ user.admin }}</td>
 </tr>
 {% endfor %}
+{% endblock %}
+
+{% block add_form %}
+<div class="form-group p-1 m-2">
+    <label for="name">User name</label>
+    <input type="text" class="form-control" id="name" placeholder="Enter username" name="name" required>
+</div>
+<div class="form-group p-1 m-2">
+    <label for="email">Email address</label>
+    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+</div>
+<div class="form-group p-1 m-2">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" placeholder="Password" name="password" minlength="6" required>
+</div>
 {% endblock %}
