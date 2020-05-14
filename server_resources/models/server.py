@@ -6,16 +6,16 @@ from server_resources import db
 
 
 class OS(enum.Enum):
-    lin = 1
-    win = 2
-    mac = 3
+    Linux = 'Linux'
+    Windows = 'Windows'
+    MacOS = 'MacOS'
 
 
 class ApplicationServer(db.Model):
     __tablename__ = "application_servers"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, index=True, nullable=False)
-    private_address = db.Column(db.String, unique=True, index=True, nullable=False)
+    name = db.Column(db.String(50), unique=True, index=True, nullable=False)
+    private_address = db.Column(db.String(15), unique=True, index=True, nullable=False)
     os = db.Column(Enum(OS))
     ram_size = db.Column(db.Integer, nullable=False)
     cpu_cores = db.Column(db.Integer, nullable=False)

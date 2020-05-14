@@ -7,9 +7,9 @@ from server_resources import db
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, index=True, nullable=False)
-    email = db.Column(db.String, unique=True, index=True, nullable=False)
-    _password = db.Column("password", db.String, nullable=False)
+    name = db.Column(db.String(50), unique=True, index=True, nullable=False)
+    email = db.Column(db.String(50), unique=True, index=True, nullable=False)
+    _password = db.Column("password", db.String(100), nullable=False)
     admin = db.Column(db.Boolean, default=False)
 
     @hybrid_property
