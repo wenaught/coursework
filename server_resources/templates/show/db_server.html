@@ -1,0 +1,43 @@
+{% extends 'bases/base_show.html' %}
+{% set record_name = db_server.name %}
+{% set delete_url = url_for('db_servers.delete', name=db_server.name) %}
+{% set update_url = url_for('db_servers.update', name=db_server.name) %}
+{% block title %} {{ db_server.name }} {% endblock %}
+{% block table_header %}
+<th scope="col">Name</th>
+<th scope="col">Private address</th>
+<th scope="col">Database port</th>
+<th scope="col">Database management system</th>
+<th scope="col">Storage size, GB</th>
+{% endblock %}
+{% block table_content %}
+    <td>{{ db_server.name }}</td>
+    <td>{{ db_server.private_address }}</td>
+    <td>{{ db_server.db_port }}</td>
+    <td>{{ db_server.dbms }}</td>
+    <td>{{ db_server.storage_size }}</td>
+{% endblock %}
+{% if g.user.admin %}
+{% block update_form %}
+<div class="form-group p-1">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" placeholder="{{ db_server.name }}" name="name">
+</div>
+<div class="form-group p-1">
+    <label for="private_address">Private address</label>
+    <input type="text" class="form-control" id="private_address" placeholder="{{ db_server.private_address }}" name="private_address">
+</div>
+<div class="form-group p-1">
+    <label for="db_port">Database port</label>
+    <input type="number" class="form-control" id="db_port" placeholder="{{ db_server.db_port }}" name="db_port">
+</div>
+<div class="form-group p-1">
+    <label for="dbms">DBMS</label>
+    <input type="text" class="form-control" id="dbms" placeholder="{{ db_server.dbms }}" name="dbms">
+</div>
+<div class="form-group p-1">
+    <label for="storage_size">Storage size, GB</label>
+    <input type="number" class="form-control" id="storage_size" placeholder="{{ db_server.storage_size }}" name="storage_size">
+</div>
+{% endblock %}
+{% endif %}

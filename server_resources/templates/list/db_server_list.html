@@ -1,26 +1,55 @@
 {% extends 'bases/base_list.html' %}
+{% set add_url = url_for('db_servers.add') %}
+
 {% block title %}Database Server List{% endblock %}
 {% block table_header %}
 <th scope="col">ID</th>
 <th scope="col">Name</th>
-<th scope="col">Private Address</th>
-<th scope="col">OS</th>
-<th scope="col">RAM Size, GB</th>
-<th scope="col">CPU Cores</th>
-<th scope="col">Drive Size, GB</th>
+<th scope="col">Private address</th>
+<th scope="col">Database port</th>
+<th scope="col">Database management system</th>
+<th scope="col">Storage size, GB</th>
 <th scope="col">Deployment</th>
 {% endblock %}
 {% block table_body %}
-{% for db_server in servers %}
+{% for db_server in servers if (db_server.deployment in g.user.deployments) or g.user.admin %}
 <tr>
-    <th scope="row">{{ app_server.id }}</th>
-    <td><a href="{{ url_for(app_server.show, name=app_server.name) }}">{{ app_server.name }}</a></td>
-    <td>{{ app_server.private_address }}</td>
-    <td>{{ app_server.os }}</td>
-    <td>{{ app_server.ram_size }}</td>
-    <td>{{ app_server.cpu_cores }}</td>
-    <td>{{ app_server.drive_size }}</td>
-    <td><a href="{{ url_for(deployment.show) }}">{{ app_server.deployment.name }}</a></td>
+    <th scope="row">{{ db_server.id }}</th>
+    <td><a href="{{ url_for('db_servers.show', name=db_server.name) }}">{{ db_server.name }}</a></td>
+    <td>{{ db_server.private_address }}</td>
+    <td>{{ db_server.db_port }}</td>
+    <td>{{ db_server.dbms }}</td>
+    <td>{{ db_server.storage_size }}</td>
+    {% if db_server.deployment %}
+    <td><a href="{{ url_for(deployment.show) }}">{{ db_server.deployment.name }}</a></td>
+    {% else %}
+    <td>None</td>
+    {% endif %}
 </tr>
 {% endfor %}
 {% endblock %}
+
+{% if g.user.admin %}
+{% block add_form %}
+<div class="form-group p-1">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" placeholder="Server Name" name="name" required>
+</div>
+<div class="form-group p-1">
+    <label for="private_address">Private address</label>
+    <input type="text" class="form-control" id="private_address" placeholder="Private address" name="private_address" required>
+</div>
+<div class="form-group p-1">
+    <label for="db_port">Database port</label>
+    <input type="number" class="form-control" id="db_port" placeholder="Database port" name="db_port" required>
+</div>
+<div class="form-group p-1">
+    <label for="dbms">DBMS</label>
+    <input type="text" class="form-control" id="dbms" placeholder="Database management system" name="dbms" required>
+</div>
+<div class="form-group p-1">
+    <label for="storage_size">Storage size, GB</label>
+    <input type="number" class="form-control" id="storage_size" placeholder="Storage size, GB" name="storage_size" required>
+</div>
+{% endblock %}
+{% endif %}

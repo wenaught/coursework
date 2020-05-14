@@ -1,0 +1,54 @@
+{% extends 'bases/base_show.html' %}
+{% set record_name = app_server.name %}
+{% set delete_url = url_for('app_servers.delete', name=app_server.name) %}
+{% set update_url = url_for('app_servers.update', name=app_server.name) %}
+{% block title %} {{ app_server.name }} {% endblock %}
+{% block table_header %}
+<th scope="col">Name</th>
+<th scope="col">Private Address</th>
+<th scope="col">OS</th>
+<th scope="col">RAM Size, GB</th>
+<th scope="col">CPU Cores</th>
+<th scope="col">Drive Size, GB</th>
+{% endblock %}
+{% block table_content %}
+    <td>{{ app_server.name }}</td>
+    <td>{{ app_server.private_address }}</td>
+    <td>{{ app_server.os }}</td>
+    <td>{{ app_server.ram_size }}</td>
+    <td>{{ app_server.cpu_cores }}</td>
+    <td>{{ app_server.drive_size }}</td>
+{% endblock %}
+
+{% if g.user.admin %}
+{% block update_form %}
+<div class="form-group p-1">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" placeholder="Server Name" name="name">
+</div>
+<div class="form-group p-1">
+    <label for="private_address">Private address</label>
+    <input type="text" class="form-control" id="private_address" placeholder="Private address" name="private_address">
+</div>
+<div class="form-group p-1">
+    <label for="os">OS</label>
+    <select class="form-control" id="os" name="os">
+        <option value="Windows">Windows</option>
+        <option value="Linux">Linux</option>
+        <option value="MacOS">MacOS</option>
+    </select>
+</div>
+<div class="form-group p-1">
+    <label for="ram_size">RAM size</label>
+    <input type="number" class="form-control" id="ram_size" placeholder="RAM size, GB" name="ram_size">
+</div>
+<div class="form-group p-1">
+    <label for="cpu_cores">CPU Cores</label>
+    <input type="number" class="form-control" id="cpu_cores" placeholder="CPU cores" name="cpu_cores">
+</div>
+<div class="form-group p-1">
+    <label for="drive_size">Drive size, GB</label>
+    <input type="number" class="form-control" id="drive_size" placeholder="Drive size, GB" name="drive_size">
+</div>
+{% endblock %}
+{% endif %}

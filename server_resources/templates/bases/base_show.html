@@ -59,7 +59,7 @@
     </div>
 </div>
 {% endif %}
-{% if record_name == g.user.name or g.user.admin %}
+{% if (record_name == g.user.name) or g.user.admin %}
 <div class="modal fade" id="update" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
