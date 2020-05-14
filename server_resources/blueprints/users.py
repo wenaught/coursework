@@ -8,13 +8,13 @@ from flask import url_for
 
 from server_resources import db
 from server_resources.models.user import User
-from server_resources.blueprints.auth import login_required
+from server_resources.blueprints.auth import login_required, admin_required
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
 
 @blueprint.route('/list_users', methods=('GET', 'POST'))
-@login_required
+@admin_required
 def list_users():
     if g.user.admin:
         return render_template("list/user_list.html", user_list=User.query.all())
@@ -45,10 +45,11 @@ def update(name):
     email = request.form.get("email", None)
     password = request.form["password"]
     new_password = request.form.get("new_password", None)
+    admin = bool(request.form.get("admin", None))
     warning = None
-    if not email and not new_password:
+    if not email and not new_password and not admin:
         warning = "Change at least one value"
-    if not user.check_password(password):
+    if not user.check_password(password) and not g.user.admin:
         warning = "Incorrect password"
     if warning:
         flash(warning, 'warning')
@@ -57,23 +58,26 @@ def update(name):
         user.email = email
     if new_password:
         user.password = new_password
+    user.admin = admin
     db.session.commit()
     return redirect(url_for('users.show', name=name))
 
 
 @blueprint.route("/add", methods=["POST"])
+@admin_required
 def add():
     email = request.form["email"]
     name = request.form['name']
     password = request.form["password"]
+    admin = bool(request.form.get("admin", None))
     warning = None
     if db.session.query(User.query.filter_by(name=name).exists()).scalar():
         warning = f"User {name} is already registered."
     elif db.session.query(User.query.filter_by(email=email).exists()).scalar():
         warning = "This email is already registered."
     if warning is None:
-        db.session.add(User(name=name, email=email, password=password))
+        db.session.add(User(name=name, email=email, password=password, admin=admin))
         db.session.commit()
-        return redirect(url_for("users.list_users"))
-    flash(warning, 'warning')
+    else:
+        flash(warning, 'warning')
     return redirect(url_for("users.list_users"))

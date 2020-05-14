@@ -25,6 +25,17 @@ def login_required(view):
     return wrapped_view
 
 
+def admin_required(view):
+    """View decorator that redirects anonymous users to the login page."""
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if not g.user.admin:
+            flash('Unauthorized access', 'warning')
+            return redirect(url_for("index"))
+        return view(**kwargs)
+    return wrapped_view
+
+
 @blueprint.before_app_request
 def load_logged_in_user():
     """If a user id is stored in the session, load the user object from
